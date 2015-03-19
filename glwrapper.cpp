@@ -22,6 +22,12 @@ void GLWrapper::setPointColor(float r, float g, float b)
 
 void GLWrapper::drawLine(float x1, float y1, float x2, float y2)
 {
+	float tangle = (y2-y1)/(x2-x1);
+	for(float i = x1; i <x2; i+=0.01){
+		drawPoint(i,i*tangle);
+	}
+	drawPoint(x2,y2);
+
 	// Complete your code here, you can only use GLWrapper::drawPoint
 	// To determine how many samples you want, You may need to calculate the pixel width
 }
