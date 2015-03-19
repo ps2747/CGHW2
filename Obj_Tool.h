@@ -1,13 +1,15 @@
 #ifndef OBJ_TOOL_H
 #define OBJ_TOOL_H
 
-#include <iostream>
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
-#include <SDL/SDL.h>
+#include <glm/glm.hpp>
+#include "Mesh.h"
 
-
+namespace HeyRenderer
+{
+	void LoadObjMesh(const char *filename, Mesh &out);
+	
+}
+/*
 class Obj_Tool
 {
 public:
@@ -20,10 +22,10 @@ public:
 
 private:
 	std::vector<glm::vec3> catch_vertices;
-	std::vector<glm::vec2> catch_uvs;
-	std::vector<glm::vec3> catch_normals;
+//	std::vector<glm::vec2> catch_uvs;
+//	std::vector<glm::vec3> catch_normals;
 	std::vector<std::vector <unsigned int >> fVertexIndices;
 
-}
+}*/
 
 #endif //OBJ_TOOL_H

@@ -2,8 +2,12 @@
 #include <cstdlib>
 #include "hw2.h"
 #include "glwrapper.h"
+#include "Mesh.h"
+#include "Obj_Tool.h"
 
 static void render();
+
+HeyRenderer::Mesh my_mesh;
 
 int main(void)
 {
@@ -23,6 +27,8 @@ int main(void)
 
     // Make the window's context current
     glfwMakeContextCurrent(window);
+
+    HeyRenderer::LoadObjMesh("monkey.obj", my_mesh);
 
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
@@ -46,7 +52,7 @@ static void render()
     GLWrapper::clearScreen();
     // Complete your code here
     // if a is press??
-    HW2::drawCircle(0, 0, 0.25, 200);
-    // else draw Model
-
+    //HW2::drawCircle(0, 0, 0.25, 200);
+    // else draw Mode
+    HW2::drawMesh(my_mesh);
 }

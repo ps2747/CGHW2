@@ -1,111 +1,53 @@
 #include "Obj_Tool.h"
+#include <cstdio>
 
-//public:
+#define BUFFER_SIZE 128
 
-Obj_Tool::Obj_Tool()
+typedef bool (*PROCESS_FUNC)(char *, HeyRenderer::Mesh &);
+
+static bool process_v(char *linebuffer, HeyRenderer::Mesh &out);
+static bool process_f(char *linebuffer, HeyRenderer::Mesh &out);
+
+static PROCESS_FUNC pfunc_ptr[]=
 {
-	catch_fVertexIndices.resize(4);
+process_v, process_f
+};
+
+void HeyRenderer::LoadObjMesh(const char *filename, Mesh &out)
+{
+	char linebuffer[BUFFER_SIZE];
+	FILE *fp = fopen(filename, "r");
+
+	while(!feof(fp))
+	{
+		fgets(linebuffer, BUFFER_SIZE, fp);
+		for(int i=0;i<2;i++)
+			if(pfunc_ptr[i](linebuffer, out))
+				break;
+	}
+
+	fclose(fp);
 }
 
-void Obj_Tool::LoadObj(const char *path)
+static bool process_v(char *linebuffer, HeyRenderer::Mesh &out)
 {
-	printf("Loading OBJ file %s ... \n",path);
-	std::vector <unsigned int > vertexIndices,uvIndices,normalIndices;
-	std::vector <glm::vec3> temp_vertices;
-	std::vector <glm::vec2> temp_uvs;
-	std::vector <glm::vec3> temp_normals;
-
-	FILE * file = fopen(path,"r");
-
-	if(file == NULL){
-		printf("Error load file!!\n");
+	HeyRenderer::Vertex v;
+	if(sscanf(linebuffer, "v %f %f %f", &v.pos.x, &v.pos.y, &v.pos.z)!=3)
 		return false;
-	}
-
-	while(1){
-		char lineHeader[128];
-		//read the first word of the line
-		int res = fscanf(file, "%s",lineHeader);
-		if(res == EOF)
-		break;//EOF = End of File . Quit the loop
-
-		//else : parse lineHeader
-
-		if(strcmp (lineHeader, "v") == 0){
-			cout<<"Get v"<<endl;
-			glm::vec3 vertex;
-			fscanf(file , "%f %f %f\n", &vertex.x,&vertex.y,&vertex.z);
-			temp_vertices.push_back(vertex);
-		}
-		/*else if (strcmp(lineHeader, "vt") == 0	){
-			cout<<"Get vt"<<endl;
-			glm::vec2 uv;
-			fscanf(file,"%f %f\n",  &uv.x, &uv.y);
-			uv.y = -uv.y;//Invert V coordinate since we will only use DDs texture, which are inverted .Remove if you want to use TGA or BMP loaders
-			temp_uvs.push_back(uv);
-		}*/
-		/*else if (strcmp(lineHeader, "vn") == 0){
-			cout<<"Get vn"<<endl;
-			glm::vec3 normal;
-			fscanf(file , "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-			temp_normals.push_back(normal);
-		}*/
-		else if (strcmp(lineHeader , "f") == 0){
-			cout<<"Get f"<<endl;
-			unsigned int vertexIndex[4];
-			int matches = fscanf(file, "%d %d %d %d %d\n", &vertexIndex[0], &vertexIndex[1],&vertexIndex[2], &vertexIndex[3]);
-
-			catch_fVertexIndices.push.push_back(vertexIndex);
-		}
-		else {
-			//Probably a comment , eat up the rest of the line
-			char commentBuffer[1000];
-			fgets(commentBuffer, 1000,file);
-		}
-
-	}
-
-	//For each vertex of each triangle
-/*	for( unsigned int i = 0; i < vertexIndices.size(); ++i ){
-		
-		//Get the indices of its attributes
-		unsigned int vertexIndex = vertexIndices[i];
-		unsigned int normalIndex = normalIndices[i];
-
-		//Get the attributes by index
-		glm::vec3 vertex = temp_vertices[vertexIndex - 1];
-		glm::vec3 normal = temp_normals[nromalIndex - 1];
-
-		//Put the attribute in buffers
-		catch_vertices.push_back(vertex);
-		catch_normals.push_back(normal);
-	}*/
 	
-}
+	out.vertices.push_back(v);
 
-void Obj_Tool::getVertices(std::vector<glm::vec3> &);
-void Obj_Tool::getUvs(std::vector<glm::vec2> &);
-void Obj_Tool::getNormals(std::vector<glm::vec3> &);
-void Obj_Tool::getfVertexIndices(std::vector<std::vector <unsigned int >> &out_fVertexIndices)
+	return true;
+}
+static bool process_f(char *linebuffer, HeyRenderer::Mesh &out)
 {
-	out_fVertexIndices.assign(catch_fVertexIndices.begin(),catch_fVertexIndices.end());
-
+	unsigned int o, a, b;
+	if(sscanf(linebuffer, "f %u %u %u", &o, &a, &b)==3)
+	{
+		out.indices.push_back(o-1);
+		out.indices.push_back(a-1);
+		out.indices.push_back(b-1);
+		return true;
+	}
+	return false;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
