@@ -9,9 +9,9 @@
 namespace HeyRenderer
 {
 	void TransMesh(glm::vec3 direction, Mesh &ctlMesh);
-	void RotateMesh(glm::vec2 rotAngle, Mesh &ctlMesh);
+	void RotateMesh(float rotAngle, Mesh &ctlMesh);
 	void ScalingMesh(glm::vec3 scalingVal, Mesh &ctlMesh);
-	void ShearMesh(std::vector shearVal, Mesh &ctlMesh);
+	void ShearMesh(float shearVal, Mesh &ctlMesh);
 }
 
 

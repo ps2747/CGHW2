@@ -13,9 +13,9 @@ namespace HeyRenderer
 		std::vector<int> indices;//Vertices which construct a triangle
 		//Provide a way to make Mesh stay in origin status
 		glm::vec3 	backTrans;//catch backward translation
-		glm::vec2	backRot;//catch backward rotation
+		float		backRot;//catch backward rotation
 		glm::vec3	backScale;//catch backward scale
-		std::vector 	backShear;//catch backward Shear
+		float 	backShear;//catch backward Shear
 	};
 }
 

@@ -4,8 +4,10 @@
 #include "glwrapper.h"
 #include "Mesh.h"
 #include "Obj_Tool.h"
+#include "Mesh_Tool.h"
 
 static void render();
+void ObjectCtl();
 
 HeyRenderer::Mesh my_mesh;
 
@@ -33,6 +35,9 @@ int main(void)
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
     {
+	// Control Objects
+	ObjectCtl();
+
         // Render here
         render();
 
@@ -55,4 +60,9 @@ static void render()
     //HW2::drawCircle(0, 0, 0.25, 200);
     // else draw Mode
     HW2::drawMesh(my_mesh);
+}
+
+void ObjectCtl()
+{
+	HeyRenderer::RotateMesh(0.01,my_mesh);
 }
