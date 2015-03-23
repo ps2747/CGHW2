@@ -4,6 +4,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "Vertex.h"
+#include "HeyColor.h"
 
 namespace HeyRenderer
 {
@@ -15,6 +16,7 @@ namespace HeyRenderer
 		glm::vec3 	worldPos;//catch backward translation
 		glm::vec3	worldRot;//catch backward rotation
 		glm::vec3	backOriginScale;
+		std::vector<HeyColor>	faceColor;
 		float		backShear;
 	};
 }

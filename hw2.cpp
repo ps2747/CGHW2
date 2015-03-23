@@ -4,6 +4,7 @@
 #include <time.h>
 
 #include "Mesh.h"
+#include "HeyColor.h"
 
 #ifndef M_PI
 #define M_PI    3.1415926535
@@ -41,7 +42,7 @@ void HW2::drawMesh_pers(const float d,const HeyRenderer::Mesh &in)
 		aTemp.x = a.x/(a.z/d);aTemp.y = a.y/(a.z/d);aTemp.z = a.z/(a.z/d);
 
 		//draw face
-		GLWrapper::drawTriangle(oTemp.x,oTemp.y,aTemp.x,aTemp.y,bTemp.x,bTemp.y,(float) rand()/(RAND_MAX+1.0),(float) rand()/(RAND_MAX+1.0),(float) rand()/(RAND_MAX+1.0));
+		GLWrapper::drawTriangle(oTemp.x,oTemp.y,aTemp.x,aTemp.y,bTemp.x,bTemp.y,in.faceColor[i/3].r,in.faceColor[i/3].g,in.faceColor[i/3].b);
 
 		//draw edge
 		GLWrapper::drawLine(oTemp.x, oTemp.y, aTemp.x, aTemp.y);
@@ -51,3 +52,13 @@ void HW2::drawMesh_pers(const float d,const HeyRenderer::Mesh &in)
 
 }
 
+void HW2::randSetMeshColor(HeyRenderer::Mesh &mesh){
+	HeyRenderer::HeyColor tempColor;
+	for(int i = 0;i<mesh.indices.size(); i+=3){
+		tempColor.r = (float) rand()/(RAND_MAX+1.0);
+		tempColor.g = (float) rand()/(RAND_MAX+1.0);
+		tempColor.b = (float) rand()/(RAND_MAX+1.0);
+		mesh.faceColor.push_back(tempColor);
+	}
+
+}

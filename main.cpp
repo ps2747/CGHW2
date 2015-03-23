@@ -39,6 +39,9 @@ int main(void)
     //make object farther
     HeyRenderer::TransMesh(glm::vec3(0,0,-1),my_mesh);
 
+    //random set face color
+    HW2::randSetMeshColor(my_mesh);
+
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
     {
