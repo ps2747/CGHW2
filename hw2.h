@@ -6,7 +6,8 @@
 namespace HW2
 {
 	void drawCircle(float x, float y, float r, int seg);
-	void drawMesh(const HeyRenderer::Mesh &in);
+	void drawMesh_otho(const HeyRenderer::Mesh &in);
+	void drawMesh_pers(const float d,const HeyRenderer::Mesh &in);
 	// design your function interface here
 	// ex.
 	// Mesh *loadMesh(const char *filename)
