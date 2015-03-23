@@ -1,6 +1,8 @@
 #include "hw2.h"
 #include "glwrapper.h"
 #include <cmath>
+#include <time.h>
+
 #include "Mesh.h"
 
 #ifndef M_PI
@@ -27,17 +29,21 @@ void HW2::drawMesh_otho(const HeyRenderer::Mesh &in)
 
 void HW2::drawMesh_pers(const float d,const HeyRenderer::Mesh &in)
 {
-	glm::vec3 oTemp,aTemp,bTemp;	
+	glm::vec3 oTemp,aTemp,bTemp;
+	srand((unsigned ) time(NULL));
 	for(int i=0; i<in.indices.size(); i+=3){
 		const glm::vec3 &o=in.vertices[in.indices[i]].pos;
 		const glm::vec3 &a=in.vertices[in.indices[i+1]].pos;
 		const glm::vec3 &b=in.vertices[in.indices[i+2]].pos;
+
 		oTemp.x = o.x/(o.z/d);oTemp.y = o.y/(o.z/d);oTemp.z = o.z/(o.z/d);
 		bTemp.x = b.x/(b.z/d);bTemp.y = b.y/(b.z/d);bTemp.z = b.z/(b.z/d);
 		aTemp.x = a.x/(a.z/d);aTemp.y = a.y/(a.z/d);aTemp.z = a.z/(a.z/d);
 
-		
+		//draw face
+		GLWrapper::drawTriangle(oTemp.x,oTemp.y,aTemp.x,aTemp.y,bTemp.x,bTemp.y,(float) rand()/(RAND_MAX+1.0),(float) rand()/(RAND_MAX+1.0),(float) rand()/(RAND_MAX+1.0));
 
+		//draw edge
 		GLWrapper::drawLine(oTemp.x, oTemp.y, aTemp.x, aTemp.y);
 		GLWrapper::drawLine(oTemp.x, oTemp.y, bTemp.x, bTemp.y);
 		GLWrapper::drawLine(bTemp.x, bTemp.y, aTemp.x, aTemp.y);
