@@ -11,7 +11,9 @@ namespace GLWrapper
 	void setPointColor(float r, float g, float b);
 	void drawLine(float x1, float y1, float x2, float y2);
 	void drawLine_Color(float , float , float , float ,const float,const float,const float);
-	void drawTriangle(float,float,float,float,float,float,const float,const float,const float);
+	void drawTriangle(float ,float ,float ,float ,float ,float ,const float ,const float ,const float );
+
 }
+	
 
 #endif

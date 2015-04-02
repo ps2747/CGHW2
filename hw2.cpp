@@ -42,7 +42,7 @@ void HW2::drawMesh_pers(const float d,const HeyRenderer::Mesh &in)
 		aTemp.x = a.x/(a.z/d);aTemp.y = a.y/(a.z/d);aTemp.z = a.z/(a.z/d);
 
 		//draw face
-		GLWrapper::drawTriangle(oTemp.x,oTemp.y,aTemp.x,aTemp.y,bTemp.x,bTemp.y,in.faceColor[i/3].r,in.faceColor[i/3].g,in.faceColor[i/3].b);
+		//GLWrapper::drawTriangle(oTemp.x,oTemp.y,aTemp.x,aTemp.y,bTemp.x,bTemp.y,in.faceColor[i/3].r,in.faceColor[i/3].g,in.faceColor[i/3].b);
 
 		//draw edge
 		GLWrapper::drawLine(oTemp.x, oTemp.y, aTemp.x, aTemp.y);
