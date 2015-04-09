@@ -12,11 +12,13 @@ namespace HeyRenderer
 	{
 		std::vector<Vertex> vertices;
 		std::vector<int> indices;//Vertices which construct a triangle
+		
+		glm::mat4 	transMat;
 		//Provide a way to make Mesh stay in origin status
 		glm::vec3 	worldPos;//catch backward translation
 		glm::vec3	worldRot;//catch backward rotation
 		glm::vec3	backOriginScale;
-		std::vector<HeyColor>	faceColor;
+		std::vector<glm::vec3>	faceColor;
 		float		backShear;
 	};
 }

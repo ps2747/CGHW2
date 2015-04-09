@@ -14,9 +14,11 @@ void GLWrapper::clearScreen()
 
 void GLWrapper::drawPoint(float x, float y)
 {
-	glBegin(GL_POINTS);
-	glVertex2f(x, y);
-	glEnd();
+	if(x>=-1 && x<=1 &&y>=-1 && y<=1 ){
+		glBegin(GL_POINTS);
+		glVertex2f(x, y);
+		glEnd();
+	}
 }
 
 void GLWrapper::drawPoint_Color(float x,float y,const float r,const float g,const float b)

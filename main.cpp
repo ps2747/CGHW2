@@ -75,9 +75,10 @@ static void render()
 
 void ObjectCtl()
 {
-	direction = glm::vec3 (0.001f);
+	//direction = glm::vec3 (0.001f);
 	//HeyRenderer::TransMesh(direction,my_mesh);
-	//HeyRenderer::ScalingMesh(direction, my_mesh);
-	HeyRenderer::RotateMesh_X(0.01,my_mesh);
+	direction = glm::vec3 (1.001f);
+	HeyRenderer::ScalingMesh(direction, my_mesh);
+	HeyRenderer::RotateMesh_Y(0.01,my_mesh);
 	//HeyRenderer::ShearMesh(0.0001,my_mesh);
 }

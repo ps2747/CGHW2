@@ -78,11 +78,7 @@ void HeyRenderer::TransMesh(glm::vec3 direction, Mesh &ctlMesh)
 {
 	glm::vec4 position ;
 	TransMat(direction);
-	for(int i = 0; i <ctlMesh.vertices.size(); ++i){
-		position = glm::vec4(ctlMesh.vertices[i].pos,1.0);
-		position =  transMat * position;
-		ctlMesh.vertices[i].pos = position.xyz();
-	}
+	ctlMesh.transMat = transMat * ctlMesh.transMat;
 	ctlMesh.worldPos += direction;
 }
 
@@ -96,12 +92,9 @@ void HeyRenderer::RotateMesh_X(float rotAngle, Mesh &ctlMesh)
 	rotateMat_X = rotateMat_X * transMat;
 	TransMat(ctlMesh.worldPos);
 	rotateMat_X = transMat * rotateMat_X;
+	
+	ctlMesh.transMat = rotateMat_X  * ctlMesh.transMat;
 
-	for(int i = 0; i< ctlMesh.vertices.size(); ++i){
-		position = glm::vec4(ctlMesh.vertices[i].pos,1.0);
-		position =  rotateMat_X * position;
-		ctlMesh.vertices[i].pos = position.xyz();
-	}
 	ctlMesh.worldRot.x =  rotAngle;
 	
 }
@@ -117,12 +110,7 @@ void HeyRenderer::RotateMesh_Y(float rotAngle, Mesh &ctlMesh)
 	TransMat(ctlMesh.worldPos);
 	rotateMat_Y = transMat * rotateMat_Y;
 
-	RotateMat_Y(rotAngle);
-	for(int i = 0; i< ctlMesh.vertices.size(); ++i){
-		position = glm::vec4(ctlMesh.vertices[i].pos,1.0);
-		position =  rotateMat_Y * position;
-		ctlMesh.vertices[i].pos = position.xyz();
-	}
+	ctlMesh.transMat = rotateMat_Y *ctlMesh.transMat;
 	ctlMesh.worldRot.y =  rotAngle;
 }
 
@@ -136,23 +124,22 @@ void HeyRenderer::RotateMesh_Z(float rotAngle, Mesh &ctlMesh)
 	rotateMat_Z = rotateMat_Z * transMat;
 	TransMat(ctlMesh.worldPos);
 	rotateMat_Z = transMat * rotateMat_Z;
+	
+	ctlMesh.transMat = rotateMat_Z * ctlMesh.transMat;
 
-	for(int i = 0; i< ctlMesh.vertices.size(); ++i){
-		position = glm::vec4(ctlMesh.vertices[i].pos,1.0);
-		position =  rotateMat_Z * position;
-		ctlMesh.vertices[i].pos = position.xyz();
-	}
 	ctlMesh.worldRot.z =  rotAngle;
 }
 void HeyRenderer::ScalingMesh(glm::vec3 scalingVal, Mesh &ctlMesh)
 {
 	glm::vec4 position ;
+	TransMat(-ctlMesh.worldPos);
 	ScalingMat(scalingVal);
-	for(int i = 0; i< ctlMesh.vertices.size(); ++i){
-		position = glm::vec4(ctlMesh.vertices[i].pos,1.0);
-		position =  scalingMat * position;
-		ctlMesh.vertices[i].pos = position.xyz();
-	}
+	scalingMat = scalingMat * transMat;
+	TransMat(ctlMesh.worldPos);
+	scalingMat = transMat * scalingMat ;
+
+	ctlMesh.transMat = scalingMat * ctlMesh.transMat ;
+	
 	ctlMesh.backOriginScale -= scalingVal;
 
 }
