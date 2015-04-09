@@ -1,5 +1,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <math.h>
 #include "glwrapper.h"
 
 #define abs(a) ((a)>=0?(a):-(a))
@@ -142,10 +143,18 @@ void GLWrapper::drawLine_Color(float x1, float y1,float z1, float x2, float y2, 
 
 void GLWrapper::drawTriangle(float x1,float y1,float z1,float x2,float y2,float z2,float x3,float y3,float z3,const float r,const float g,const float b)
 {
-	int sample = 200;
+	int sample = 150;
 	for(int i = 0;i <= sample ; ++i){
 		drawLine_Color(x1,y1,z1,x2+i*(x3-x2)/sample,y2+i*(y3-y2)/sample,z2+i*(z3-z2)/sample,r,g,b);
 	}
+	/*glColor3f(r, g, b);
+	if((pow(x2-x1,2)+pow(y2-y1,2))>pow(0.00625,2)||(pow(x2-x3,2)+pow(y2-y3,2))>pow(0.00625,2)||(pow(x3-x1,2)+pow(y3-y1,2))>pow(0.00625,2)){
+		drawPoint((x1+x2+x3)/3,(y1+y2+y3)/3 ,(z1+z2+z3)/3);
+		drawTriangle(x1,y1,z1,x2,y2, z2,(x1+x2+x3)/3,(y1+y2+y3)/3 ,(z1+z2+z3)/3, r,g, b);
+		drawTriangle(x1,y1,z1,(x1+x2+x3)/3,(y1+y2+y3)/3 ,(z1+z2+z3)/3, x3, y3, z3, r,g, b);
+		drawTriangle((x1+x2+x3)/3,(y1+y2+y3)/3 ,(z1+z2+z3)/3,x2,y2, z2, x3, y3, z3, r,g, b);
+	}*/
+		
 
 
 }

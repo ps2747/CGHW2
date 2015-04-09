@@ -12,8 +12,11 @@
 static void render();
 void ObjectCtl();
 glm::vec3 direction;
+static int mode ;
 
 HeyRenderer::Mesh my_mesh;
+
+static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int mods);
 
 int main(void)
 {
@@ -33,7 +36,11 @@ int main(void)
 
     // Make the window's context current
     glfwMakeContextCurrent(window);
-
+    
+    //Set control  
+    mode =1;
+    glfwSetKeyCallback(window , ObjectCtl);
+    
     HeyRenderer::LoadObjMesh("monkey.obj", my_mesh);
 
     //make object farther
@@ -45,8 +52,6 @@ int main(void)
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
     {
-	// Control Objects
-	ObjectCtl();
 
         // Render here
         render();
@@ -73,12 +78,80 @@ static void render()
     //HW2::drawMesh_otho(my_mesh);
 }
 
-void ObjectCtl()
+
+static void keyCallBack(GLFWwindow *window, int key , int scancode,int action,int mods);
+static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int mods)
 {
-	//direction = glm::vec3 (0.001f);
-	//HeyRenderer::TransMesh(direction,my_mesh);
-	direction = glm::vec3 (1.001f);
-	//HeyRenderer::ScalingMesh(direction, my_mesh);
-	HeyRenderer::RotateMesh_Y(0.01,my_mesh);
-	//HeyRenderer::ShearMesh(0.0001,my_mesh);
+
+	if(mode == 1){
+		if(key == GLFW_KEY_UP && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			direction = glm::vec3 (0.0f,0.003f,0.0f);
+			HeyRenderer::TransMesh(direction,my_mesh);
+		}
+		if(key == GLFW_KEY_LEFT && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			direction = glm::vec3 (-0.003f,0.0f,0.0f);
+			HeyRenderer::TransMesh(direction,my_mesh);
+		}
+		if(key == GLFW_KEY_DOWN && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			direction = glm::vec3 (0.0f,-0.003f,0.0f);
+			HeyRenderer::TransMesh(direction,my_mesh);
+		}
+		if(key == GLFW_KEY_RIGHT && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			direction = glm::vec3 (0.003f,0.0f,0.0f);
+			HeyRenderer::TransMesh(direction,my_mesh);
+		}
+		if(key == GLFW_KEY_2 && action == GLFW_RELEASE){
+			mode = 2;
+		}
+		if(key == GLFW_KEY_3 && action == GLFW_RELEASE){
+			mode = 3;
+		}
+	}
+
+	if(mode == 2){
+		if(key == GLFW_KEY_UP && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			HeyRenderer::RotateMesh_X(0.03,my_mesh);
+		}
+		if(key == GLFW_KEY_LEFT && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			HeyRenderer::RotateMesh_Y(-0.03,my_mesh);	
+		}
+		if(key == GLFW_KEY_DOWN && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			HeyRenderer::RotateMesh_X(-0.03,my_mesh);
+		}
+		if(key == GLFW_KEY_RIGHT && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			HeyRenderer::RotateMesh_Y(0.03,my_mesh);
+		}
+		if(key == GLFW_KEY_1 && action == GLFW_RELEASE){
+			mode = 1;
+		}
+		if(key == GLFW_KEY_3 && action == GLFW_RELEASE){
+			mode = 3;
+		}
+	}
+
+	if(mode == 3){
+		if(key == GLFW_KEY_UP && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			direction = glm::vec3 (1.003f);
+			HeyRenderer::ScalingMesh(direction, my_mesh);
+		}
+		if(key == GLFW_KEY_LEFT && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			direction = glm::vec3 (0.997f);
+			HeyRenderer::ScalingMesh(direction, my_mesh);
+		}
+		if(key == GLFW_KEY_DOWN && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			direction = glm::vec3 (0.997f);
+			HeyRenderer::ScalingMesh(direction, my_mesh);
+		}
+		if(key == GLFW_KEY_RIGHT && (action == GLFW_REPEAT || action == GLFW_PRESS)){
+			direction = glm::vec3 (1.003f);
+			HeyRenderer::ScalingMesh(direction, my_mesh);
+		}
+		if(key == GLFW_KEY_2 && action == GLFW_RELEASE){
+			mode = 2;
+		}
+		if(key == GLFW_KEY_1 && action == GLFW_RELEASE){
+			mode = 1;
+		}
+
+	}
 }
