@@ -22,9 +22,9 @@ void HW2::drawMesh_otho(const HeyRenderer::Mesh &in)
 		const glm::vec3 &o=in.vertices[in.indices[i]].pos;
 		const glm::vec3 &a=in.vertices[in.indices[i+1]].pos;
 		const glm::vec3 &b=in.vertices[in.indices[i+2]].pos;
-		GLWrapper::drawLine(o.x, o.y, a.x, a.y);
-		GLWrapper::drawLine(o.x, o.y, b.x, b.y);
-		GLWrapper::drawLine(b.x, b.y, a.x, a.y);
+		GLWrapper::drawLine(o.x, o.y,o.z, a.x, a.y,a.z);
+		GLWrapper::drawLine(o.x, o.y,o.z, b.x, b.y,b.z);
+		GLWrapper::drawLine(b.x, b.y,b.z, a.x, a.y,a.z);
 	}
 }
 
@@ -46,12 +46,12 @@ void HW2::drawMesh_pers(const float d,const HeyRenderer::Mesh &in)
 		aTemp.x = a.x/(a.z/d);aTemp.y = a.y/(a.z/d);aTemp.z = a.z/(a.z/d);
 
 		//draw face
-		//GLWrapper::drawTriangle(oTemp.x,oTemp.y,aTemp.x,aTemp.y,bTemp.x,bTemp.y,in.faceColor[i/3].r,in.faceColor[i/3].g,in.faceColor[i/3].b);
+		GLWrapper::drawTriangle(oTemp.x,oTemp.y,o.z,aTemp.x,aTemp.y,a.z,bTemp.x,bTemp.y,b.z,in.faceColor[i/3].r,in.faceColor[i/3].g,in.faceColor[i/3].b);
 
 		//draw edge
-		GLWrapper::drawLine(oTemp.x, oTemp.y, aTemp.x, aTemp.y);
-		GLWrapper::drawLine(oTemp.x, oTemp.y, bTemp.x, bTemp.y);
-		GLWrapper::drawLine(bTemp.x, bTemp.y, aTemp.x, aTemp.y);
+		GLWrapper::drawLine(oTemp.x, oTemp.y,o.z, aTemp.x, aTemp.y,a.z);
+		GLWrapper::drawLine(oTemp.x, oTemp.y,o.z, bTemp.x, bTemp.y,b.z);
+		GLWrapper::drawLine(bTemp.x, bTemp.y,b.z, aTemp.x, aTemp.y,a.z);
 	}
 
 }
