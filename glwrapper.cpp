@@ -6,9 +6,9 @@
 #define abs(a) ((a)>=0?(a):-(a))
 
 static int height ,width;
-static glm::vec3 zbuffer[320][320];
-static glm::vec3 frameBuffer[320][320];
-static glm::vec3 normalBuffer[320][320];
+glm::vec3 zbuffer[320][320];
+glm::vec3 frameBuffer[320][320];
+glm::vec3 normalBuffer[320][320];
 
 static float distance(glm::vec3 pos_1 , glm::vec3 pos_2)
 {

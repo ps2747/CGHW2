@@ -29,16 +29,25 @@ void HW2::drawMesh_otho(const HeyRenderer::Mesh &in)
 		glm::vec4 o(in.vertices[in.indices[i]].pos,1.0f);
 		glm::vec4 a(in.vertices[in.indices[i+1]].pos,1.0f);
 		glm::vec4 b(in.vertices[in.indices[i+2]].pos,1.0f);
+
+		glm::vec3 oNorm = in.vertices[in.indices[i]].normal;
+		glm::vec3 aNorm = in.vertices[in.indices[i+1]].normal;
+		glm::vec3 bNorm = in.vertices[in.indices[i+2]].normal;
 			
 		oTemp = glm::vec3(in.transMat * o);
 		aTemp = glm::vec3(in.transMat * a);
 		bTemp = glm::vec3(in.transMat * b);
+
+		oNorm = glm::vec3(in.transMat * glm::vec4( oNorm, 1.0f));
+		aNorm = glm::vec3(in.transMat * glm::vec4( aNorm, 1.0f));
+		bNorm = glm::vec3(in.transMat * glm::vec4( bNorm, 1.0f));
 
 		//GLWrapper::drawLine(o, normalize(o), a, normalize (a),GLWrapper::FBUFFER);
 		//GLWrapper::drawLine(o, normalize(o), b, normalize(b),GLWrapper::FBUFFER);
 		//GLWrapper::drawLine(b, normalize(b), a, normalize(a),GLWrapper::FBUFFER);
 
 		drawTriangle(oTemp, normalize(oTemp), aTemp, normalize(aTemp), bTemp, normalize(bTemp), GLWrapper::FBUFFER);
+		drawTriangle(oTemp, oNorm, aTemp, aNorm, bTemp, bNorm, GLWrapper::NBUFFER);
 	}
 	GLWrapper::glDrawFrame(320 , 320, GLWrapper::FBUFFER);
 }
@@ -73,16 +82,18 @@ void HW2::drawMesh_pers(const float near, const float far ,const HeyRenderer::Me
 		aTemp = glm::vec3(mPer * a);
 		bTemp = glm::vec3(mPer * b);
 
-
-		//draw face
-		//GLWrapper::drawTriangle(oTemp.x,oTemp.y,o.z,aTemp.x,aTemp.y,a.z,bTemp.x,bTemp.y,b.z,in.faceColor[i/3].r,in.faceColor[i/3].g,in.faceColor[i/3].b);
-		//drawTriangle(oTemp, normalize(oTemp), aTemp, normalize(aTemp), bTemp, normalize(bTemp), GLWrapper::FBUFFER);
 		//draw edge
 		//GLWrapper::drawLine(oTemp, normalize(oTemp), aTemp, normalize(aTemp),GLWrapper::FBUFFER);
 		//GLWrapper::drawLine(oTemp, normalize(oTemp), bTemp, normalize(bTemp),GLWrapper::FBUFFER);
 		//GLWrapper::drawLine(bTemp, normalize(bTemp), aTemp, normalize(aTemp),GLWrapper::FBUFFER);
-		drawTriangle(oTemp, o.z, normalize(oTemp), aTemp, a.z, normalize(aTemp), bTemp, b.z, normalize(bTemp), GLWrapper::FBUFFER); //Pos map
-		drawTriangle(oTemp, o.z, oNorm, aTemp, a.z, aNorm, bTemp, b.z, bNorm, GLWrapper::NBUFFER); //Normal map
+		//drawTriangle(oTemp, o.z, normalize(oTemp), aTemp, a.z, normalize(aTemp), bTemp, b.z, normalize(bTemp), GLWrapper::FBUFFER); //Pos map
+		if(!isFlat)
+			drawTriangle(oTemp, o.z, oNorm, aTemp, a.z, aNorm, bTemp, b.z, bNorm, GLWrapper::NBUFFER); //Normal
+		else {
+			glm::vec3 flatNorm = (oNorm + aNorm + bNorm) /3.0f;
+			drawTriangle(oTemp, o.z, flatNorm, aTemp, a.z, flatNorm, bTemp, b.z, flatNorm, GLWrapper::NBUFFER); //Flat Normal
+		}
+
 	}
 	GLWrapper::glDrawFrame(320 , 320, GLWrapper::NBUFFER);
 
