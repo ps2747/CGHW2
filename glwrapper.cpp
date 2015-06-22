@@ -6,155 +6,134 @@
 #define abs(a) ((a)>=0?(a):-(a))
 
 static int height ,width;
-static float zbuffer[320][320];
+static glm::vec3 zbuffer[320][320];
+static glm::vec3 frameBuffer[320][320];
+static glm::vec3 normalBuffer[320][320];
+
+static float distance(glm::vec3 pos_1 , glm::vec3 pos_2)
+{
+	float x = pos_2.x - pos_1.x;
+	float y = pos_2.y - pos_1.y;
+	float z = pos_2.z - pos_1.z;
+	return std::sqrt(x * x + y * y + z * z);
+
+}
 
 void GLWrapper::clearScreen()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	height =320;width = 320;
 	for(int i = 0 ;i <height ; ++i)
-		for(int j =0; j<width ;++j)
-			zbuffer[i][j]= 2000.0f;
-}
-
-void GLWrapper::drawPoint(float x, float y ,float z)
-{
-	if(x>=-1 && x<=1 &&y>=-1 && y<=1 ){
-		if(-z <zbuffer[(int)((y+1)*height/2.0f)][(int)((x+1)*width/2.0f)]){
-			zbuffer[(int)((y+1)*height/2.0f)][(int)((x+1)*width/2.0f)]= -z;
-			glBegin(GL_POINTS);
-			glVertex2f(x, y);
-			glEnd();
+		for(int j =0; j<width ;++j){
+			zbuffer[i][j] = glm::vec3(2000.0f);
+			frameBuffer[i][j] = glm::vec3(0.0f);
+			normalBuffer[i][j] = glm::vec3(0.0f);
 		}
-	}
 }
 
-void GLWrapper::drawPoint_Color(float x,float y,float z,const float r,const float g,const float b)
+void GLWrapper::glDrawFrame(int f_height , int f_width, Buffer c_buffer)
 {
-	glColor3f(r,g,b);
-	drawPoint(x,y,z);
-}
-
-void GLWrapper::setPointColor(float r, float g, float b)
-{
-	glColor3f(r, g, b);
-}
-
-void GLWrapper::drawLine( float x1, float y1,float z1,float x2,float y2,float z2)
-{
-		// Complete your code here, you can only use GLWrapper::drawPoint
-
-	//GLFWwindow *window;
-	//glfwGetWindowSize(window, &width, &height);
-	//width = 320; height = 320;
-	glm::vec2 v1((x1+1)*width/2.0f, (y1+1)*height/2.0f);
-	glm::vec2 v2((x2+1)*width/2.0f, (y2+1)*height/2.0f);
-	float slope,zSlope;
-
-	if(abs(v1.x-v2.x)>abs(v2.y-v1.y)){
-		//x changes faster than y
-		if(v1.x>v2.x)
-		{
-			glm::vec2 tmp=v1;
-			v1=v2;
-			v2=tmp;
-			float tempZ = z1;
-			z1 = z2;
-			z2 = tempZ;
-		}
-		if((int)v2.x!=(int)v1.x)
-		{
-			slope=(float)(v2.y-v1.y)/(v2.x-v1.x);
+	float x, y;
+	glBegin(GL_POINTS);
+	for(int i = 0 ;i < f_height; ++i){
+		for(int j = 0; j< f_width; ++j){
+			x = (float)j/f_width*2 - 1;
+			y = (float)i/f_height *2 - 1;
 			
-			zSlope = (float)(z2 - z1)/(v2.x-v1.x);
+			switch(c_buffer){
+				case ZBUFFER:
+					glColor3f(zbuffer[i][j].x, zbuffer[i][j].y, zbuffer[i][j].z); break;
+				case FBUFFER:
+					glColor3f(frameBuffer[i][j].x, frameBuffer[i][j].y,frameBuffer[i][j].z );  break;
+				case NBUFFER:
+					glColor3f(normalBuffer[i][j].x, normalBuffer[i][j].y,normalBuffer[i][j].z );  break;
+			} 
+			glVertex2f(x,y);	
+		}
+	}
+	glEnd();
 
-			float curx=v1.x, cury=v1.y;
-			while((int)cury!=(int)v2.y)
-			{
-				drawPoint(curx*2.0f/width-1, ((int)cury)*2.0f/height-1,z1);
-				cury+=slope;
-				z1 += zSlope;
-				curx+=1;
-			}
-			while((int)curx<=(int) v2.x){
-				drawPoint(curx*2.0f/width-1, ((int)cury)*2.0f/height-1,z1);
-				curx+=1;
-				z1 += zSlope;
-			}
-		}
-		else{
-			float curx=v1.x, cury=v1.y;
-			zSlope = (float)(z2 - z1)/(v2.y-v1.y);
-			while((int)cury<=(int)v2.y)
-			{
-				drawPoint(curx*2.0f/width-1, cury*2.0f/height-1,z1);
-				cury+=1;
-				z1 += zSlope;
-			}
-		}
-	}else
-	{
-		
-		if(v1.y>v2.y)
-		{
-			glm::vec2 tmp=v1;
-			v1=v2;
-			v2=tmp;
-			float tempZ = z1;
-			z1 = z2;
-			z2 = tempZ;
-		}
-		if((int)v2.y!=(int)v1.y)
-		{
-			slope=(float)(v2.x-v1.x)/(v2.y-v1.y);
-			zSlope = (float)(z2 - z1)/(v2.y-v1.y);
-			float curx=v1.x, cury=v1.y;
-			while((int)curx!=(int)v2.x)
-			{
-				drawPoint(((int)curx)*2.0f/width-1, cury*2.0f/height-1,z1);
-				cury+=1;
-				curx+=slope;
-				z1 += zSlope;
-			}
-			while((int)cury<=(int)v2.y){
-				drawPoint(((int)curx)*2.0f/width-1, cury*2.0f/height-1,z1);
-				cury+=1;
-				z1 += zSlope;
-			}
-		}
-		else{
-			float curx=v1.x, cury=v1.y;
-			zSlope = (float)(z2 - z1)/(v2.x-v1.x);
-			while((int)curx<=(int)v2.x)
-			{
-				drawPoint(curx*2.0f/width-1, cury*2.0f/height-1,z1);
-				curx+=1;
-				z1 +=zSlope;
+}
+
+
+void GLWrapper::drawPoint(glm::vec3 pos, glm::vec3 color, Buffer c_buffer)
+{
+	if(pos.x>=-1 && pos.x<=1 &&pos.y>=-1 &&pos.y<=1 ){
+		int x = int((pos.x+1)*width/2.0f);
+		int y = int((pos.y+1)*height/2.0f);
+		if(-pos.z <zbuffer[y][x].x){
+			zbuffer[y][x]= glm::vec3(-pos.z);
+			switch(c_buffer){
+				case ZBUFFER:
+				case FBUFFER:
+					frameBuffer[y][x] = color; break;
+				case NBUFFER:
+					normalBuffer[y][x] = color; break;
 			}
 		}
 	}
 }
 
-void GLWrapper::drawLine_Color(float x1, float y1,float z1, float x2, float y2, float z2,float r,float g,float b)
+void GLWrapper::drawLine(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2, glm::vec3 color_2,Buffer c_buffer)
 {
-	glColor3f(r, g, b);
-	drawLine(x1,y1,z1,x2,y2,z2);
+	glm::vec2 v1((pos_1.x+1)*width/2.0f, (pos_1.y+1)*height/2.0f);
+	glm::vec2 v2((pos_2.x+1)*width/2.0f, (pos_2.y+1)*height/2.0f);
+
+	glm::vec3 slope = (pos_2 - pos_1);
+
+	glm::vec3 curPos = pos_1;
+
+	int widthPixels = abs(v1.x-v2.x);
+	int heightPixels = abs(v2.y-v1.y);
+	if(widthPixels>heightPixels){
+		if(widthPixels != 0)
+			slope /= (float)widthPixels;
+		else 
+			slope = glm::vec3(0.0f);
+		for(int i = 0; i < widthPixels ; ++i){
+			float ratio = (float)i/widthPixels;
+			drawPoint(curPos , color_1 *(1- ratio) + color_2 *ratio,c_buffer);
+			curPos += slope;
+		}
+	}
+	else {
+		if(heightPixels != 0)
+			slope /= (float)heightPixels;
+		else 
+			slope = glm::vec3(0.0f);
+		for(int i = 0; i < heightPixels ; ++i){
+			float ratio =(float) i/widthPixels;
+			drawPoint(curPos , color_1 *(1- ratio) + color_2 *ratio,c_buffer);
+			curPos += slope;
+		}
+	}
 }
 
-void GLWrapper::drawTriangle(float x1,float y1,float z1,float x2,float y2,float z2,float x3,float y3,float z3,const float r,const float g,const float b)
+void GLWrapper::drawTriangle(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2, glm::vec3 color_2, glm::vec3 pos_3, glm::vec3 color_3, Buffer c_buffer)
 {
-	int sample = 150;
-	for(int i = 0;i <= sample ; ++i){
-		drawLine_Color(x1,y1,z1,x2+i*(x3-x2)/sample,y2+i*(y3-y2)/sample,z2+i*(z3-z2)/sample,r,g,b);
+	glm::vec2 v2((pos_2.x+1)*width/2.0f, (pos_2.y+1)*height/2.0f);
+	glm::vec2 v3((pos_3.x+1)*width/2.0f, (pos_3.y+1)*height/2.0f);
+
+	int widthPixels = abs(v3.x-v2.x);
+	int heightPixels = abs(v2.y-v3.y);
+	int sample;
+	if(widthPixels>heightPixels)
+		sample = widthPixels + 70;
+	else 
+		sample = heightPixels + 70;
+
+	for (int i = 0 ; i <sample; ++i){
+		float ratio = i / sample;
+		glm::vec3 sColor = color_2* (1 - ratio) + color_3 * ratio;
+		drawLine(pos_1, color_1, glm::vec3(pos_2.x+i*(pos_3.x-pos_2.x)/sample,pos_2.y+i*(pos_3.y-pos_2.y)/sample,pos_2.z+i*(pos_3.z-pos_2.z)/sample), sColor , c_buffer);
+
 	}
-	/*glColor3f(r, g, b);
-	if((pow(x2-x1,2)+pow(y2-y1,2))>pow(0.00625,2)||(pow(x2-x3,2)+pow(y2-y3,2))>pow(0.00625,2)||(pow(x3-x1,2)+pow(y3-y1,2))>pow(0.00625,2)){
-		drawPoint((x1+x2+x3)/3,(y1+y2+y3)/3 ,(z1+z2+z3)/3);
-		drawTriangle(x1,y1,z1,x2,y2, z2,(x1+x2+x3)/3,(y1+y2+y3)/3 ,(z1+z2+z3)/3, r,g, b);
-		drawTriangle(x1,y1,z1,(x1+x2+x3)/3,(y1+y2+y3)/3 ,(z1+z2+z3)/3, x3, y3, z3, r,g, b);
-		drawTriangle((x1+x2+x3)/3,(y1+y2+y3)/3 ,(z1+z2+z3)/3,x2,y2, z2, x3, y3, z3, r,g, b);
-	}*/
-		
+}
 
-
+void GLWrapper::drawTriangle(glm::vec3 pos_1, float originZ_1, glm::vec3 color_1, glm::vec3 pos_2, float originZ_2, glm::vec3 color_2, glm::vec3 pos_3,  float originZ_3, glm::vec3 color_3, Buffer c_buffer)
+{
+	pos_1.z = originZ_1;
+	pos_2.z = originZ_2; 
+	pos_3.z = originZ_3;
+	drawTriangle(pos_1, color_1, pos_2, color_2, pos_3, color_3, c_buffer);
 }

@@ -10,6 +10,12 @@
 #define M_PI    3.1415926535
 #endif
 
+static glm::vec3 normalize(glm::vec3 in)
+{
+	float d = sqrt(in.x * in.x + in.y * in.y + in.z * in.z);
+	return in / d;
+}
+
 void HW2::drawCircle(float x, float y, float r, int seg)
 {
     // Complete your code here
@@ -17,42 +23,68 @@ void HW2::drawCircle(float x, float y, float r, int seg)
 
 void HW2::drawMesh_otho(const HeyRenderer::Mesh &in)
 {
+	glm::vec3 oTemp,aTemp,bTemp;
 	for(int i=0; i<in.indices.size(); i+=3)
 	{
-		const glm::vec3 &o=in.vertices[in.indices[i]].pos;
-		const glm::vec3 &a=in.vertices[in.indices[i+1]].pos;
-		const glm::vec3 &b=in.vertices[in.indices[i+2]].pos;
-		GLWrapper::drawLine(o.x, o.y,o.z, a.x, a.y,a.z);
-		GLWrapper::drawLine(o.x, o.y,o.z, b.x, b.y,b.z);
-		GLWrapper::drawLine(b.x, b.y,b.z, a.x, a.y,a.z);
+		glm::vec4 o(in.vertices[in.indices[i]].pos,1.0f);
+		glm::vec4 a(in.vertices[in.indices[i+1]].pos,1.0f);
+		glm::vec4 b(in.vertices[in.indices[i+2]].pos,1.0f);
+			
+		oTemp = glm::vec3(in.transMat * o);
+		aTemp = glm::vec3(in.transMat * a);
+		bTemp = glm::vec3(in.transMat * b);
+
+		//GLWrapper::drawLine(o, normalize(o), a, normalize (a),GLWrapper::FBUFFER);
+		//GLWrapper::drawLine(o, normalize(o), b, normalize(b),GLWrapper::FBUFFER);
+		//GLWrapper::drawLine(b, normalize(b), a, normalize(a),GLWrapper::FBUFFER);
+
+		drawTriangle(oTemp, normalize(oTemp), aTemp, normalize(aTemp), bTemp, normalize(bTemp), GLWrapper::FBUFFER);
 	}
+	GLWrapper::glDrawFrame(320 , 320, GLWrapper::FBUFFER);
 }
 
-void HW2::drawMesh_pers(const float d,const HeyRenderer::Mesh &in)
+void HW2::drawMesh_pers(const float near, const float far ,const HeyRenderer::Mesh &in)
 {
 	glm::vec3 oTemp,aTemp,bTemp;
-	srand((unsigned ) time(NULL));
+	glm::mat4 mPer(
+		- near, 0.0f, 0.0f, 0.0f,
+		0.0f, - near, 0.0f, 0.0f,
+		0.0f, 0.0f,  (near + far)/(near - far), (-2 *near * far) / (near - far),
+		0.0f, 0.0f, -1, 0.0f
+	);
 	for(int i=0; i<in.indices.size(); i+=3){
 		glm::vec4 o(in.vertices[in.indices[i]].pos,1.0f);
 		glm::vec4 a(in.vertices[in.indices[i+1]].pos,1.0f);
 		glm::vec4 b(in.vertices[in.indices[i+2]].pos,1.0f);
+
+		glm::vec3 oNorm = in.vertices[in.indices[i]].normal;
+		glm::vec3 aNorm = in.vertices[in.indices[i+1]].normal;
+		glm::vec3 bNorm = in.vertices[in.indices[i+2]].normal;
 			
 		o = in.transMat * o;
 		a = in.transMat * a;
 		b = in.transMat * b;
 
-		oTemp.x = o.x/(o.z/d);oTemp.y = o.y/(o.z/d);oTemp.z = o.z/(o.z/d);
-		bTemp.x = b.x/(b.z/d);bTemp.y = b.y/(b.z/d);bTemp.z = b.z/(b.z/d);
-		aTemp.x = a.x/(a.z/d);aTemp.y = a.y/(a.z/d);aTemp.z = a.z/(a.z/d);
+		oNorm = glm::vec3(in.transMat * glm::vec4( oNorm, 1.0f));
+		aNorm = glm::vec3(in.transMat * glm::vec4( aNorm, 1.0f));
+		bNorm = glm::vec3(in.transMat * glm::vec4( bNorm, 1.0f));
+
+		oTemp = glm::vec3(mPer * o);
+		aTemp = glm::vec3(mPer * a);
+		bTemp = glm::vec3(mPer * b);
+
 
 		//draw face
-		GLWrapper::drawTriangle(oTemp.x,oTemp.y,o.z,aTemp.x,aTemp.y,a.z,bTemp.x,bTemp.y,b.z,in.faceColor[i/3].r,in.faceColor[i/3].g,in.faceColor[i/3].b);
-
+		//GLWrapper::drawTriangle(oTemp.x,oTemp.y,o.z,aTemp.x,aTemp.y,a.z,bTemp.x,bTemp.y,b.z,in.faceColor[i/3].r,in.faceColor[i/3].g,in.faceColor[i/3].b);
+		//drawTriangle(oTemp, normalize(oTemp), aTemp, normalize(aTemp), bTemp, normalize(bTemp), GLWrapper::FBUFFER);
 		//draw edge
-		GLWrapper::drawLine(oTemp.x, oTemp.y,o.z, aTemp.x, aTemp.y,a.z);
-		GLWrapper::drawLine(oTemp.x, oTemp.y,o.z, bTemp.x, bTemp.y,b.z);
-		GLWrapper::drawLine(bTemp.x, bTemp.y,b.z, aTemp.x, aTemp.y,a.z);
+		//GLWrapper::drawLine(oTemp, normalize(oTemp), aTemp, normalize(aTemp),GLWrapper::FBUFFER);
+		//GLWrapper::drawLine(oTemp, normalize(oTemp), bTemp, normalize(bTemp),GLWrapper::FBUFFER);
+		//GLWrapper::drawLine(bTemp, normalize(bTemp), aTemp, normalize(aTemp),GLWrapper::FBUFFER);
+		drawTriangle(oTemp, o.z, normalize(oTemp), aTemp, a.z, normalize(aTemp), bTemp, b.z, normalize(bTemp), GLWrapper::FBUFFER); //Pos map
+		drawTriangle(oTemp, o.z, oNorm, aTemp, a.z, aNorm, bTemp, b.z, bNorm, GLWrapper::NBUFFER); //Normal map
 	}
+	GLWrapper::glDrawFrame(320 , 320, GLWrapper::NBUFFER);
 
 }
 

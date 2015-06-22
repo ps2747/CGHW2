@@ -7,7 +7,7 @@ namespace HW2
 {
 	void drawCircle(float x, float y, float r, int seg);
 	void drawMesh_otho(const HeyRenderer::Mesh &in);
-	void drawMesh_pers(const float d,const HeyRenderer::Mesh &in);
+	void drawMesh_pers(const float near, const float far ,const HeyRenderer::Mesh &in);
 	void randSetMeshColor(HeyRenderer::Mesh &);
 	// design your function interface here
 	// ex.

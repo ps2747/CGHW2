@@ -6,11 +6,14 @@
 typedef bool (*PROCESS_FUNC)(char *, HeyRenderer::Mesh &);
 
 static bool process_v(char *linebuffer, HeyRenderer::Mesh &out);
+static bool process_vn(char *linebuffer, HeyRenderer::Mesh &out);
 static bool process_f(char *linebuffer, HeyRenderer::Mesh &out);
+
+static int vnCount ;
 
 static PROCESS_FUNC pfunc_ptr[]=
 {
-process_v, process_f
+process_v,process_vn, process_f
 };
 
 void HeyRenderer::LoadObjMesh(const char *filename, Mesh &out)
@@ -18,10 +21,12 @@ void HeyRenderer::LoadObjMesh(const char *filename, Mesh &out)
 	char linebuffer[BUFFER_SIZE];
 	FILE *fp = fopen(filename, "r");
 
+	if(!fp) printf("File not found\n");
+	vnCount = 0;
 	while(!feof(fp))
 	{
 		fgets(linebuffer, BUFFER_SIZE, fp);
-		for(int i=0;i<2;i++)
+		for(int i=0;i<3;i++)
 			if(pfunc_ptr[i](linebuffer, out))
 				break;
 	}
@@ -39,6 +44,17 @@ static bool process_v(char *linebuffer, HeyRenderer::Mesh &out)
 
 	return true;
 }
+
+static bool process_vn(char *linebuffer, HeyRenderer::Mesh &out)
+{
+	glm::vec3 vn;
+	if(sscanf(linebuffer, "vn %f %f %f", &vn.x, &vn.y, &vn.z)!=3)
+		return false;
+	if(vnCount < out.vertices.size())
+		out.vertices[vnCount ++].normal = vn;
+	return true;
+}
+
 static bool process_f(char *linebuffer, HeyRenderer::Mesh &out)
 {
 	unsigned int o, a, b;

@@ -74,7 +74,7 @@ static void render()
     // if a is press??
     //HW2::drawCircle(0, 0, 0.25, 200);
     // else draw Mode
-    HW2::drawMesh_pers(-0.999,my_mesh);
+    HW2::drawMesh_pers(-0.999, 10,my_mesh);
     //HW2::drawMesh_otho(my_mesh);
 }
 

@@ -5,14 +5,19 @@
 
 namespace GLWrapper
 {
-	void clearScreen();
-	void drawPoint(float, float,float);
-	void drawPoint_Color(float,float,float ,const float,const float,const float);
-	void setPointColor(float r, float g, float b);
-	void drawLine(float x1, float y1,float z1, float x2, float y2,float z2);
-	void drawLine_Color(float,float ,float , float , float , float ,const float,const float,const float);
-	void drawTriangle(float, float,float,float ,float ,float ,float ,float ,float ,const float ,const float ,const float );
+	enum Buffer {  
+		ZBUFFER,
+		FBUFFER,
+		NBUFFER
+	};
 
+	void clearScreen();
+	void glDrawFrame(int f_height , int f_width, Buffer c_buffer);
+	void drawPoint(glm::vec3 pos, glm::vec3 color, Buffer c_buffer);
+	void drawLine(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2, glm::vec3 color_2,Buffer c_buffer);
+	void drawTriangle(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2, glm::vec3 color_2, glm::vec3 pos_3, glm::vec3 color_3, Buffer c_buffer);
+	void drawTriangle(glm::vec3 pos_1, float originZ_1, glm::vec3 color_1, glm::vec3 pos_2, float originZ_2, glm::vec3 color_2, glm::vec3 pos_3,  float originZ_3, glm::vec3 color_3, Buffer c_buffer);
+	
 }
 	
 
