@@ -7,13 +7,28 @@
 
 static int height ,width;
 
+static float dot(glm::vec3 a, glm::vec3 b)
+{
+	return a.x*b.x +a.y * b.y +a.z *b.z;
+}
+
 static float distance(glm::vec3 pos_1 , glm::vec3 pos_2)
 {
 	float x = pos_2.x - pos_1.x;
 	float y = pos_2.y - pos_1.y;
 	float z = pos_2.z - pos_1.z;
 	return std::sqrt(x * x + y * y + z * z);
+}
 
+static glm::vec3 reflect(glm::vec3 v ,glm::vec3 n)
+{
+	return -2*dot(n ,v )*n + v;
+}
+
+static glm::vec3 normalize(glm::vec3 in)
+{
+	float d = sqrt(in.x * in.x + in.y * in.y + in.z * in.z);
+	return in / d;
 }
 
 void GLWrapper::clearScreen()
@@ -134,4 +149,36 @@ void GLWrapper::drawTriangle(glm::vec3 pos_1, float originZ_1, glm::vec3 color_1
 	pos_2.z = originZ_2; 
 	pos_3.z = originZ_3;
 	drawTriangle(pos_1, color_1, pos_2, color_2, pos_3, color_3, c_buffer);
+}
+
+void GLWrapper::litDirLight(glm::vec3 dir)
+{
+	//dir = normalize(dir);
+	for(int i = 0 ;i <height; i++)
+		for(int j  = 0 ;j < width; j++){
+			glm::vec3 refVec = reflect (normalize(dir) , normalBuffer[i][j]);
+			glm::vec3 veiwVec = glm::vec3(0.0f,0.0f,-1.0f);
+			glm::vec3 originColor= glm::vec3(0.5,0.5,0.5);
+			float l_Dot_n = dot( - dir , normalBuffer[i][j]);
+			float r_Dot_v = dot(refVec , veiwVec);
+			if(l_Dot_n < 0) l_Dot_n = 0;
+			if(r_Dot_v < 0) r_Dot_v = 0;
+
+
+			glm::mat4 Coex = glm::mat4(
+				1.0,1.0,1.0,0.0,
+				l_Dot_n,l_Dot_n,l_Dot_n,0.0,
+				r_Dot_v,r_Dot_v,r_Dot_v,0.0,
+				0.0,0.0,0.0,1.0
+			);
+
+			glm::mat4 K = glm::mat4(
+				0.03,0.03,0.03,0.0,
+				0.03,0.03,0.03,0.0,
+				0.03,0.03,0.03,0.0,
+				0.0,0.0,0.0,1.0
+			);
+
+			frameBuffer[i][j] = glm::vec3(K*Coex*glm::vec4(originColor,1.0));
+		}
 }

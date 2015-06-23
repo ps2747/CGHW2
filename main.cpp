@@ -12,6 +12,7 @@
 static void render();
 void ObjectCtl();
 glm::vec3 direction;
+bool isGround = false ;
 static int mode ;
 
 HeyRenderer::Mesh my_mesh;
@@ -74,8 +75,12 @@ static void render()
     // if a is press??
     //HW2::drawCircle(0, 0, 0.25, 200);
     // else draw Mode
-    HW2::drawMesh_pers(-0.999, 10,my_mesh);
-    GLWrapper::glDrawFrame(320 , 320, GLWrapper::NBUFFER);
+    HW2::litDirLight(glm::vec3(1.0f, 1.0f, 0.0f));
+    if(isGround)	
+    	HW2::drawMesh_pers_ground(-0.999, 10,my_mesh);	
+    else 
+    	HW2::drawMesh_pers(-0.999, 10,my_mesh);
+    GLWrapper::glDrawFrame(320 , 320, GLWrapper::FBUFFER);
     //HW2::drawMesh_otho(my_mesh);
 }
 
@@ -107,6 +112,17 @@ static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int 
 		if(key == GLFW_KEY_3 && action == GLFW_RELEASE){
 			mode = 3;
 		}
+		if(key == GLFW_KEY_4 && action == GLFW_RELEASE){
+			HW2::setFlat(false);
+			isGround = false;
+		}
+		if(key == GLFW_KEY_5 && action == GLFW_RELEASE){
+			HW2::setFlat(true);
+			isGround = false;
+		}
+		if(key == GLFW_KEY_6 && action == GLFW_RELEASE){
+			isGround = true;
+		}
 	}
 
 	if(mode == 2){
@@ -127,6 +143,17 @@ static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int 
 		}
 		if(key == GLFW_KEY_3 && action == GLFW_RELEASE){
 			mode = 3;
+		}
+		if(key == GLFW_KEY_4 && action == GLFW_RELEASE){
+			HW2::setFlat(false);
+			isGround = false;
+		}
+		if(key == GLFW_KEY_5 && action == GLFW_RELEASE){
+			HW2::setFlat(true);
+			isGround = false;
+		}
+		if(key == GLFW_KEY_6 && action == GLFW_RELEASE){
+			isGround = true;
 		}
 	}
 
@@ -153,6 +180,16 @@ static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int 
 		if(key == GLFW_KEY_1 && action == GLFW_RELEASE){
 			mode = 1;
 		}
-
+		if(key == GLFW_KEY_4 && action == GLFW_RELEASE){
+			HW2::setFlat(false);
+			isGround = false;
+		}
+		if(key == GLFW_KEY_5 && action == GLFW_RELEASE){
+			HW2::setFlat(true);
+			isGround = false;
+		}
+		if(key == GLFW_KEY_6 && action == GLFW_RELEASE){
+			isGround = true;
+		}
 	}
 }
