@@ -10,9 +10,9 @@ namespace GLWrapper
 		FBUFFER,
 		NBUFFER
 	};
-	glm::vec3 zbuffer[320][320];
-	glm::vec3 frameBuffer[320][320];
-	glm::vec3 normalBuffer[320][320];
+	static glm::vec3 zbuffer[320][320];
+	static glm::vec3 frameBuffer[320][320];
+	static glm::vec3 normalBuffer[320][320];
 
 	void clearScreen();
 	void glDrawFrame(int f_height , int f_width, Buffer c_buffer);

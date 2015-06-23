@@ -87,7 +87,7 @@ void HW2::drawMesh_pers(const float near, const float far ,const HeyRenderer::Me
 		//GLWrapper::drawLine(oTemp, normalize(oTemp), bTemp, normalize(bTemp),GLWrapper::FBUFFER);
 		//GLWrapper::drawLine(bTemp, normalize(bTemp), aTemp, normalize(aTemp),GLWrapper::FBUFFER);
 		//drawTriangle(oTemp, o.z, normalize(oTemp), aTemp, a.z, normalize(aTemp), bTemp, b.z, normalize(bTemp), GLWrapper::FBUFFER); //Pos map
-		if(!isFlat)
+		if(!false )
 			drawTriangle(oTemp, o.z, oNorm, aTemp, a.z, aNorm, bTemp, b.z, bNorm, GLWrapper::NBUFFER); //Normal
 		else {
 			glm::vec3 flatNorm = (oNorm + aNorm + bNorm) /3.0f;

@@ -10,7 +10,6 @@ namespace HW2
 	void drawMesh_pers(const float near, const float far ,const HeyRenderer::Mesh &in);
 	void randSetMeshColor(HeyRenderer::Mesh &);
 
-	bool isFlat = true;
 	// design your function interface here
 	// ex.
 	// Mesh *loadMesh(const char *filename)
