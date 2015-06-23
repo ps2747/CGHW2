@@ -75,6 +75,7 @@ static void render()
     //HW2::drawCircle(0, 0, 0.25, 200);
     // else draw Mode
     HW2::drawMesh_pers(-0.999, 10,my_mesh);
+    GLWrapper::glDrawFrame(320 , 320, GLWrapper::NBUFFER);
     //HW2::drawMesh_otho(my_mesh);
 }
 

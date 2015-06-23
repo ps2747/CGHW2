@@ -83,9 +83,9 @@ void HW2::drawMesh_pers(const float near, const float far ,const HeyRenderer::Me
 		bTemp = glm::vec3(mPer * b);
 
 		//draw edge
-		//GLWrapper::drawLine(oTemp, normalize(oTemp), aTemp, normalize(aTemp),GLWrapper::FBUFFER);
-		//GLWrapper::drawLine(oTemp, normalize(oTemp), bTemp, normalize(bTemp),GLWrapper::FBUFFER);
-		//GLWrapper::drawLine(bTemp, normalize(bTemp), aTemp, normalize(aTemp),GLWrapper::FBUFFER);
+		//GLWrapper::drawLine(oTemp, oNorm, aTemp, aNorm,GLWrapper::NBUFFER);
+		//GLWrapper::drawLine(oTemp, oNorm, bTemp, bNorm,GLWrapper::NBUFFER);
+		//GLWrapper::drawLine(bTemp, bNorm, aTemp, aNorm,GLWrapper::NBUFFER);
 		//drawTriangle(oTemp, o.z, normalize(oTemp), aTemp, a.z, normalize(aTemp), bTemp, b.z, normalize(bTemp), GLWrapper::FBUFFER); //Pos map
 		if(!false )
 			drawTriangle(oTemp, o.z, oNorm, aTemp, a.z, aNorm, bTemp, b.z, bNorm, GLWrapper::NBUFFER); //Normal
@@ -95,7 +95,7 @@ void HW2::drawMesh_pers(const float near, const float far ,const HeyRenderer::Me
 		}
 
 	}
-	GLWrapper::glDrawFrame(320 , 320, GLWrapper::NBUFFER);
+	//GLWrapper::glDrawFrame(320 , 320, GLWrapper::NBUFFER);
 
 }
 

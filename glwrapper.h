@@ -20,6 +20,8 @@ namespace GLWrapper
 	void drawLine(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2, glm::vec3 color_2,Buffer c_buffer);
 	void drawTriangle(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2, glm::vec3 color_2, glm::vec3 pos_3, glm::vec3 color_3, Buffer c_buffer);
 	void drawTriangle(glm::vec3 pos_1, float originZ_1, glm::vec3 color_1, glm::vec3 pos_2, float originZ_2, glm::vec3 color_2, glm::vec3 pos_3,  float originZ_3, glm::vec3 color_3, Buffer c_buffer);
+	glm::vec3 getBufferElement (int i,int j, Buffer c_buffer);
+	void setBufferElement (int i,int j, glm::vec3 input, Buffer c_buffer);
 	
 }
 	

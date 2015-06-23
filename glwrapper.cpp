@@ -49,7 +49,6 @@ void GLWrapper::glDrawFrame(int f_height , int f_width, Buffer c_buffer)
 		}
 	}
 	glEnd();
-
 }
 
 
@@ -88,8 +87,9 @@ void GLWrapper::drawLine(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2, gl
 		else 
 			slope = glm::vec3(0.0f);
 		for(int i = 0; i < widthPixels ; ++i){
-			float ratio = (float)i/widthPixels;
+			float ratio = (float)i/(float)widthPixels;
 			drawPoint(curPos , color_1 *(1- ratio) + color_2 *ratio,c_buffer);
+			//drawPoint(curPos , color_2 ,c_buffer);
 			curPos += slope;
 		}
 	}
@@ -99,8 +99,9 @@ void GLWrapper::drawLine(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2, gl
 		else 
 			slope = glm::vec3(0.0f);
 		for(int i = 0; i < heightPixels ; ++i){
-			float ratio =(float) i/widthPixels;
+			float ratio =(float) i/(float)heightPixels;
 			drawPoint(curPos , color_1 *(1- ratio) + color_2 *ratio,c_buffer);
+			//drawPoint(curPos , color_2 ,c_buffer);
 			curPos += slope;
 		}
 	}
