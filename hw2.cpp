@@ -85,9 +85,14 @@ void HW2::drawMesh_pers(const float near, const float far ,const HeyRenderer::Me
 		aNorm = glm::vec3(in.transMat * glm::vec4( aNorm, 1.0f));
 		bNorm = glm::vec3(in.transMat * glm::vec4( bNorm, 1.0f));
 
-		oTemp = glm::vec3(mPer * o);
-		aTemp = glm::vec3(mPer * a);
-		bTemp = glm::vec3(mPer * b);
+		glm::vec4 divW_o,divW_a,divW_b;
+		divW_o = mPer * o;  divW_o/= divW_o.w;
+		divW_a = mPer * a;  divW_a/= divW_a.w;
+		divW_b = mPer * b;  divW_b/= divW_b.w;
+
+		oTemp = glm::vec3( divW_o);
+		aTemp = glm::vec3( divW_a);
+		bTemp = glm::vec3(divW_b);
 
 		//draw edge
 		//GLWrapper::drawLine(oTemp, oNorm, aTemp, aNorm,GLWrapper::NBUFFER);
@@ -109,6 +114,7 @@ void HW2::drawMesh_pers(const float near, const float far ,const HeyRenderer::Me
 
 void HW2::drawMesh_pers_ground(const float near, const float far ,const HeyRenderer::Mesh &in)
 {
+	glm::vec3 grondLightDir = glm::vec3 (m_dir.x, m_dir.y, -m_dir.z);
 	glm::vec3 oTemp,aTemp,bTemp;
 	glm::mat4 mPer(
 		- near, 0.0f, 0.0f, 0.0f,
@@ -138,7 +144,7 @@ void HW2::drawMesh_pers_ground(const float near, const float far ,const HeyRende
 		aTemp = glm::vec3(mPer * a);
 		bTemp = glm::vec3(mPer * b);
 
-		drawTriangle(oTemp, o.z, pixelLighting(oNorm, m_dir), aTemp, a.z, pixelLighting(aNorm, m_dir), bTemp, b.z, pixelLighting(bNorm, m_dir), GLWrapper::FBUFFER); 
+		drawTriangle(oTemp, o.z, pixelLighting(oNorm, grondLightDir), aTemp, a.z, pixelLighting(aNorm, grondLightDir), bTemp, b.z, pixelLighting(bNorm, grondLightDir), GLWrapper::FBUFFER); 
 
 	}
 }
@@ -170,8 +176,8 @@ glm::vec3 HW2::pixelLighting(glm::vec3 n, glm::vec3 v)
 		0.0,0.0,0.0,1.0
 	);
 	glm::mat4 K = glm::mat4(
-		0.03,0.03,0.03,0.0,
-		0.03,0.03,0.03,0.0,
+		0.3,0.3,0.3,0.0,
+		0.5,0.5,0.5,0.0,
 		0.03,0.03,0.03,0.0,
 		0.0,0.0,0.0,1.0
 	);

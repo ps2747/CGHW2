@@ -59,9 +59,13 @@ int main(void)
     HeyRenderer::LoadObjMesh("cube.obj", mesh_3);
 
     //make object farther
-    HeyRenderer::TransMesh(glm::vec3(0,0,-1),mesh_1);
-    HeyRenderer::TransMesh(glm::vec3(0,0,-1),mesh_2);
-    HeyRenderer::TransMesh(glm::vec3(0,0,-1),mesh_3);
+    HeyRenderer::TransMesh(glm::vec3(0,0,-1.5),mesh_1);
+    HeyRenderer::TransMesh(glm::vec3(0,0,-1.5),mesh_2);
+    HeyRenderer::TransMesh(glm::vec3(0,0,-1.5),mesh_3);
+
+    HeyRenderer::ScalingMesh(glm::vec3(0.15f ), mesh_1);
+    HeyRenderer::ScalingMesh(glm::vec3(0.5f ), mesh_3);
+
 
     // Loop until the user closes the window
     while (!glfwWindowShouldClose(window))
@@ -113,6 +117,67 @@ static void render()
 static void keyCallBack(GLFWwindow *window, int key , int scancode,int action,int mods);
 static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int mods)
 {
+	if(key == GLFW_KEY_Q && action == GLFW_RELEASE)
+		mesh_1_enable = !mesh_1_enable;
+	
+	if(key == GLFW_KEY_W && action == GLFW_RELEASE)
+		mesh_2_enable = !mesh_2_enable;
+	
+	if(key == GLFW_KEY_E && action == GLFW_RELEASE)
+		mesh_3_enable = !mesh_3_enable;
+	
+	//Control ambiance
+	if(key == GLFW_KEY_A && action == GLFW_RELEASE)
+		GLWrapper::litSetAmbi(0.05f);
+	
+	if(key == GLFW_KEY_Z && action == GLFW_RELEASE)
+		GLWrapper::litSetAmbi(-0.05f);
+
+	//control diffuse R
+	if(key == GLFW_KEY_S && action == GLFW_RELEASE)
+		GLWrapper::litSetDiffColor_R(0.05f);
+
+	if(key == GLFW_KEY_X && action == GLFW_RELEASE)
+		GLWrapper::litSetDiffColor_R(-0.05f);
+
+	//control diffuse G
+	if(key == GLFW_KEY_D && action == GLFW_RELEASE)
+		GLWrapper::litSetDiffColor_G(0.05f);
+
+	if(key == GLFW_KEY_C && action == GLFW_RELEASE)
+		GLWrapper::litSetDiffColor_G(-0.05f);
+
+	//control diffuse B
+	if(key == GLFW_KEY_F && action == GLFW_RELEASE)
+		GLWrapper::litSetDiffColor_B(0.05f);
+
+	if(key == GLFW_KEY_V && action == GLFW_RELEASE)
+		GLWrapper::litSetDiffColor_B(-0.05f);
+
+	if(key == GLFW_KEY_I && action == GLFW_RELEASE){
+		if(mesh_1_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(1.0f, 1.0f, -1.0f), mesh_1);
+		if(mesh_2_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(1.0f, 1.0f, -1.0f), mesh_2);
+		if(mesh_3_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(1.0f, 1.0f, -1.0f), mesh_3);
+	}
+	if(key == GLFW_KEY_K && action == GLFW_RELEASE){
+		if(mesh_1_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(-1.0f, 1.0f, 1.0f), mesh_1);
+		if(mesh_2_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(-1.0f, 1.0f, 1.0f), mesh_2);
+		if(mesh_3_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(-1.0f, 1.0f, 1.0f), mesh_3);
+	}
+	if(key == GLFW_KEY_L && action == GLFW_RELEASE){
+		if(mesh_1_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(1.0f, -1.0f, 1.0f), mesh_1);
+		if(mesh_2_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(1.0f, -1.0f, 1.0f), mesh_2);
+		if(mesh_3_enable)
+			HeyRenderer::ScalingMesh(glm::vec3(1.0f, -1.0f, 1.0f), mesh_3);
+	}
 
 	if(mode == 1){//Trans mode
 		if(key == GLFW_KEY_UP && (action == GLFW_REPEAT || action == GLFW_PRESS)){
@@ -139,7 +204,7 @@ static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int 
 		}
 		if(key == GLFW_KEY_3 && action == GLFW_RELEASE){
 			mode = 3;
-			scalingMode = 0;
+			scalingMode = 3;
 		}
 		if(key == GLFW_KEY_4 && action == GLFW_RELEASE){
 			mode = 4;
@@ -349,7 +414,7 @@ static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int 
 		}
 		if(key == GLFW_KEY_3 && action == GLFW_RELEASE){
 			mode = 3;
-			scalingMode = 0;
+			scalingMode = 3;
 		}
 
 		if(key == GLFW_KEY_5 && action == GLFW_RELEASE){

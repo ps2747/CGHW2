@@ -15,7 +15,7 @@ namespace GLWrapper
 	static glm::vec3 normalBuffer[320][320];
 
 	static glm::vec3 ambiColor = glm::vec3(0.3f,0.3f,0.3f);
-	static glm::vec3 diffColor = glm::vec3(0.03f,0.03f,0.03f);
+	static glm::vec3 diffColor = glm::vec3(0.5f,0.5f,0.5f);
 
 	void clearScreen();
 	void glDrawFrame(int f_height , int f_width, Buffer c_buffer);
@@ -26,10 +26,11 @@ namespace GLWrapper
 	glm::vec3 getBufferElement (int i,int j, Buffer c_buffer);
 	void setBufferElement (int i,int j, glm::vec3 input, Buffer c_buffer);
 	void litDirLight(glm::vec3 dir);
-	void litSetAmbi(glm::vec3 );
+	void litSetAmbi(float);
 	void litSetDiffColor(glm::vec3 );
-
-	
+	void litSetDiffColor_R(float);
+	void litSetDiffColor_G(float);
+	void litSetDiffColor_B(float);
 }
 	
 

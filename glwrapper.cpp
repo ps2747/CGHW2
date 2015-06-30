@@ -186,11 +186,25 @@ void GLWrapper::litDirLight(glm::vec3 dir)
 		}
 }
 
-void GLWrapper::litSetAmbi(glm::vec3 in)
-{
-	ambiColor = in;
-}
 void GLWrapper::litSetDiffColor(glm::vec3 in)
 {
 	diffColor = in;
+}
+
+void GLWrapper::litSetAmbi(float valume)
+{
+	ambiColor +=valume;
+}
+void GLWrapper::litSetDiffColor_R(float valume)
+{
+	diffColor.r += valume;
+}
+
+void GLWrapper::litSetDiffColor_G(float valume)
+{
+	diffColor.g += valume;
+}
+void GLWrapper::litSetDiffColor_B(float valume)
+{
+	diffColor.b += valume;
 }
