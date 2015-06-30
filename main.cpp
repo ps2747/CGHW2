@@ -16,6 +16,9 @@ bool isGround = false ;
 static int mode ;
 
 HeyRenderer::Mesh my_mesh;
+HeyRenderer::Mesh mesh_1;
+HeyRenderer::Mesh mesh_2;
+HeyRenderer::Mesh mesh_3;
 
 static void ObjectCtl(GLFWwindow *window, int key , int scancode,int action,int mods);
 
@@ -42,7 +45,11 @@ int main(void)
     mode =1;
     glfwSetKeyCallback(window , ObjectCtl);
     
-    HeyRenderer::LoadObjMesh("monkey.obj", my_mesh);
+    HeyRenderer::LoadObjMesh("low_ICO.obj", mesh_1);
+    HeyRenderer::LoadObjMesh("monkey.obj", mesh_2);
+    HeyRenderer::LoadObjMesh("cube.obj", mesh_3);
+    my_mesh = mesh_2;
+
 
     //make object farther
     HeyRenderer::TransMesh(glm::vec3(0,0,-1),my_mesh);

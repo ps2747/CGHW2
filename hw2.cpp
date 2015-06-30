@@ -73,9 +73,9 @@ void HW2::drawMesh_pers(const float near, const float far ,const HeyRenderer::Me
 		glm::vec4 a(in.vertices[in.indices[i+1]].pos,1.0f);
 		glm::vec4 b(in.vertices[in.indices[i+2]].pos,1.0f);
 
-		glm::vec3 oNorm = in.vertices[in.indices[i]].normal;
-		glm::vec3 aNorm = in.vertices[in.indices[i+1]].normal;
-		glm::vec3 bNorm = in.vertices[in.indices[i+2]].normal;
+		glm::vec3 oNorm = normalize(in.vertices[in.indices[i]].normal);
+		glm::vec3 aNorm = normalize(in.vertices[in.indices[i+1]].normal);
+		glm::vec3 bNorm = normalize(in.vertices[in.indices[i+2]].normal);
 			
 		o = in.transMat * o;
 		a = in.transMat * a;

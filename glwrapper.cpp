@@ -136,9 +136,10 @@ void GLWrapper::drawTriangle(glm::vec3 pos_1, glm::vec3 color_1, glm::vec3 pos_2
 		sample = heightPixels + 70;
 
 	for (int i = 0 ; i <sample; ++i){
-		float ratio = i / sample;
+		float ratio = (float)i / sample;
 		glm::vec3 sColor = color_2* (1 - ratio) + color_3 * ratio;
-		drawLine(pos_1, color_1, glm::vec3(pos_2.x+i*(pos_3.x-pos_2.x)/sample,pos_2.y+i*(pos_3.y-pos_2.y)/sample,pos_2.z+i*(pos_3.z-pos_2.z)/sample), sColor , c_buffer);
+		glm::vec3 ratioedPos = glm::vec3(pos_2.x+i*(pos_3.x-pos_2.x)/sample,pos_2.y+i*(pos_3.y-pos_2.y)/sample,pos_2.z+i*(pos_3.z-pos_2.z)/sample);
+		drawLine(pos_1, color_1, ratioedPos, sColor , c_buffer);
 
 	}
 }
@@ -173,12 +174,21 @@ void GLWrapper::litDirLight(glm::vec3 dir)
 			);
 
 			glm::mat4 K = glm::mat4(
-				0.03,0.03,0.03,0.0,
-				0.03,0.03,0.03,0.0,
+				ambiColor.r,ambiColor.g,ambiColor.b,0.0,
+				diffColor.r,diffColor.g,diffColor.b,0.0,
 				0.03,0.03,0.03,0.0,
 				0.0,0.0,0.0,1.0
 			);
 
 			frameBuffer[i][j] = glm::vec3(K*Coex*glm::vec4(originColor,1.0));
 		}
+}
+
+void GLWrapper::litSetAmbi(glm::vec3 in)
+{
+	ambiColor = in;
+}
+void GLWrapper::litSetDiffColor(glm::vec3 in)
+{
+	diffColor = in;
 }

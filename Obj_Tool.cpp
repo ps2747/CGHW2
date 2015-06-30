@@ -22,6 +22,15 @@ static glm::vec3 normalize(glm::vec3 in)
 	return in / d;
 }
 
+static glm::vec3 cross(glm::vec3 a, glm::vec3 b)
+{
+	glm::vec3 c ;
+	c.x = a.y * b.z - a.z * b.y;
+	c.y = a.z * b.x - a.x * b.z;
+	c.z = a.x * b.y - a.y * b.x;
+	return c;
+}
+
 static std::vector<glm::vec3> normalPool;
 
 void HeyRenderer::LoadObjMesh(const char *filename, Mesh &out)
@@ -67,7 +76,7 @@ static bool process_vn(char *linebuffer, HeyRenderer::Mesh &out)
 
 static bool process_f(char *linebuffer, HeyRenderer::Mesh &out)
 {
-	unsigned int o, a, b, on , an , bn;
+	unsigned int o, a, b, c, on , an , bn;
 	if(sscanf(linebuffer, "f %u//%u %u//%u%u//%u", &o,&on , &a, &an, &b, &bn)== 6)
 	{
 		out.indices.push_back(o-1);
@@ -77,6 +86,36 @@ static bool process_f(char *linebuffer, HeyRenderer::Mesh &out)
 		out.vertices[o - 1].normal  += normalPool[on -1];
 		out.vertices[a - 1].normal += normalPool[on -1];
 		out.vertices[b - 1].normal += normalPool[on -1];
+		return true;
+	}
+	else if (sscanf(linebuffer, "f %u %u %u  %u", &o , &a, &b, &c)== 4)
+	{
+		out.indices.push_back(o-1);
+		out.indices.push_back(a-1);
+		out.indices.push_back(c-1);
+
+		out.indices.push_back(a-1);
+		out.indices.push_back(b-1);
+		out.indices.push_back(c-1);
+
+		out.vertices[o - 1].normal += cross(normalize(out.vertices[a - 1].pos - out.vertices[o - 1].pos) , normalize(out.vertices[c - 1].pos - out.vertices[o - 1].pos));
+		out.vertices[a - 1].normal += cross(normalize(out.vertices[c - 1].pos - out.vertices[a - 1].pos) , normalize(out.vertices[o - 1].pos - out.vertices[a - 1].pos));
+		out.vertices[c - 1].normal += cross(normalize(out.vertices[o - 1].pos - out.vertices[c - 1].pos) , normalize(out.vertices[a - 1].pos - out.vertices[c - 1].pos));
+
+		out.vertices[a - 1].normal += cross(normalize(out.vertices[b - 1].pos - out.vertices[a - 1].pos) , normalize(out.vertices[c - 1].pos - out.vertices[a - 1].pos));
+		out.vertices[b - 1].normal += cross(normalize(out.vertices[c - 1].pos - out.vertices[b - 1].pos) , normalize(out.vertices[a - 1].pos - out.vertices[b - 1].pos));
+		out.vertices[c - 1].normal += cross(normalize(out.vertices[a - 1].pos - out.vertices[c - 1].pos) , normalize(out.vertices[b - 1].pos - out.vertices[c - 1].pos));
+		return true;
+	}
+	else if(sscanf(linebuffer, "f %u %u %u", &o , &a, &b)== 3)
+	{
+		out.indices.push_back(o-1);
+		out.indices.push_back(a-1);
+		out.indices.push_back(b-1);
+
+		out.vertices[o - 1].normal += cross(normalize(out.vertices[a - 1].pos - out.vertices[o - 1].pos) , normalize(out.vertices[b - 1].pos - out.vertices[o - 1].pos));
+		out.vertices[a - 1].normal += cross(normalize(out.vertices[b - 1].pos - out.vertices[a - 1].pos) , normalize(out.vertices[o - 1].pos - out.vertices[a - 1].pos));
+		out.vertices[b - 1].normal += cross(normalize(out.vertices[o - 1].pos - out.vertices[b - 1].pos) , normalize(out.vertices[a - 1].pos - out.vertices[b - 1].pos));
 		return true;
 	}
 	return false;
