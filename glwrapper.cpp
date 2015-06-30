@@ -157,30 +157,32 @@ void GLWrapper::litDirLight(glm::vec3 dir)
 	//dir = normalize(dir);
 	for(int i = 0 ;i <height; i++)
 		for(int j  = 0 ;j < width; j++){
-			glm::vec3 refVec = reflect (normalize(dir) , normalBuffer[i][j]);
-			glm::vec3 veiwVec = glm::vec3(0.0f,0.0f,-1.0f);
-			glm::vec3 originColor= glm::vec3(0.5,0.5,0.5);
-			float l_Dot_n = dot( - dir , normalBuffer[i][j]);
-			float r_Dot_v = dot(refVec , veiwVec);
-			if(l_Dot_n < 0) l_Dot_n = 0;
-			if(r_Dot_v < 0) r_Dot_v = 0;
+			if(zbuffer[i][j].x <  2000.0f){
+				glm::vec3 refVec = reflect (normalize(dir) , normalBuffer[i][j]);
+				glm::vec3 veiwVec = glm::vec3(0.0f,0.0f,-1.0f);
+				glm::vec3 originColor= glm::vec3(0.5,0.5,0.5);
+				float l_Dot_n = dot( - dir , normalBuffer[i][j]);
+				float r_Dot_v = dot(refVec , veiwVec);
+				if(l_Dot_n < 0) l_Dot_n = 0;
+				if(r_Dot_v < 0) r_Dot_v = 0;
 
 
-			glm::mat4 Coex = glm::mat4(
-				1.0,1.0,1.0,0.0,
-				l_Dot_n,l_Dot_n,l_Dot_n,0.0,
-				r_Dot_v,r_Dot_v,r_Dot_v,0.0,
-				0.0,0.0,0.0,1.0
-			);
+				glm::mat4 Coex = glm::mat4(
+					1.0,1.0,1.0,0.0,
+					l_Dot_n,l_Dot_n,l_Dot_n,0.0,
+					r_Dot_v,r_Dot_v,r_Dot_v,0.0,
+					0.0,0.0,0.0,1.0
+				);
 
-			glm::mat4 K = glm::mat4(
-				ambiColor.r,ambiColor.g,ambiColor.b,0.0,
-				diffColor.r,diffColor.g,diffColor.b,0.0,
-				0.03,0.03,0.03,0.0,
-				0.0,0.0,0.0,1.0
-			);
+				glm::mat4 K = glm::mat4(
+					ambiColor.r,ambiColor.g,ambiColor.b,0.0,
+					diffColor.r,diffColor.g,diffColor.b,0.0,
+					0.03,0.03,0.03,0.0,
+					0.0,0.0,0.0,1.0
+				);
 
-			frameBuffer[i][j] = glm::vec3(K*Coex*glm::vec4(originColor,1.0));
+				frameBuffer[i][j] = glm::vec3(K*Coex*glm::vec4(originColor,1.0));
+			}
 		}
 }
 
